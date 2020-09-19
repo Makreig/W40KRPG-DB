@@ -1,0 +1,8 @@
+---
+Name: approutes
+After: '*'
+---
+SilverStripe\Control\Director:
+  rules:
+    '': 'App\Control\RootURLController'
+    'restapi//$Action/$ID/$Name': 'App\Control\RestApiController'
