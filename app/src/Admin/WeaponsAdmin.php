@@ -4,6 +4,7 @@ namespace App\Admin;
 
 use App\Model\Weapon;
 use App\Model\WeaponQuality;
+use App\Model\WeaponUpgrade;
 use ilateral\SilverStripe\ModelAdminPlus\ModelAdminPlus;
 
 class WeaponsAdmin extends ModelAdminPlus
@@ -13,6 +14,7 @@ class WeaponsAdmin extends ModelAdminPlus
     private static $managed_models = [
         Weapon::class,
         WeaponQuality::class,
+        WeaponUpgrade::class,
     ];
 
     private static $url_segment = 'weapons';
