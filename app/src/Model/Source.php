@@ -19,4 +19,9 @@ class Source extends DataObject
             $this->Key = urlencode($this->Name);
         }
     }
+
+    private static $summary_fields = [
+        'Name',
+        'Key',
+    ];
 }

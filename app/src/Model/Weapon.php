@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use App\Model\WeaponQuality;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\ORM\DataObject;
 
 class Weapon extends DataObject
@@ -58,9 +59,29 @@ class Weapon extends DataObject
         'KeyName' => ['Name', 'SourceID'],
     ];
 
+    private static $summary_fields = [
+        'Name',
+        'Category',
+        'Group',
+        'Class',
+        'Type',
+        'Wt',
+    ];
+
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
+
+        $qual_grid = $fields->dataFieldByName('Qualities');
+        if ($qual_grid->exists()) {
+            $config = $qual_grid->getConfig();
+            $cols = $config->getComponentByType(GridFieldDataColumns::class);
+            if ($cols) {
+                $disfields = $cols->getDisplayFields($qual_grid);
+                $disfields["Level"] = 'Level';
+                $cols->setDisplayFields($disfields);
+            }
+        }
 
         return $fields;
     }
@@ -74,7 +95,7 @@ class Weapon extends DataObject
             $list = explode(',', $this->SpecialList);
             foreach ($list as $special) {
                 // find or make Quality
-                preg_match('/^[^\(]+/m', $this->SpecialList, $matches);
+                preg_match('/^[^\(]+/m', $special, $matches);
                 $name = trim($matches[0]);
                 $existing = WeaponQuality::get()->find('Name', $name);
                 if (!$existing) {
@@ -83,17 +104,13 @@ class Weapon extends DataObject
                     $new->write();
                     $existing = $new;
                 }
-                $this->Qualities()->add($existing);
                 // check for a level
                 preg_match('/\((.*?)\)/m', $special, $level);
                 if (isset($level[1])) {
-                    $quality = $this->Qualities()->byID($existing->ID);
-                    if ($quality) {
-                        $quality->Level = (int) $level[1];
-                    }
+                    $this->Qualities()->add($existing, ["Level" => $level[1]]);
+                } else {
+                    $this->Qualities()->add($existing);
                 }
-
-                unset($list[$special]);
             }
             $this->SpecialList = null;
         }
@@ -101,7 +118,7 @@ class Weapon extends DataObject
         //link source
         if ($this->SourceName) {
             $src = Source::get()->find('Name', $this->SourceName);
-            if (!$src->exists()) {
+            if (!$src) {
                 $src = Source::create();
                 $src->Name = $this->SourceName;
                 $src->write();

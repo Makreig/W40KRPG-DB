@@ -50,4 +50,27 @@ class WeaponUpgrade extends DataObject
     private static $has_one = [
         'Source' => Source::class,
     ];
+
+    private static $summary_fields = [
+        'Sort',
+        'Name',
+        'Category',
+    ];
+
+    public function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+
+        //link source
+        if ($this->SourceName) {
+            $src = Source::get()->find('Name', $this->SourceName);
+            if (!$src->exists()) {
+                $src = Source::create();
+                $src->Name = $this->SourceName;
+                $src->write();
+            }
+            $this->SourceID = $src->ID;
+            $this->SourceName = null;
+        }
+    }
 }

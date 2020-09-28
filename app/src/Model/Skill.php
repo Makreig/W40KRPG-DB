@@ -24,4 +24,15 @@ class Skill extends DataObject
         'Source' => Source::class,
     ];
 
+    private static $summary_fields = [
+        "Sort",
+        "Name",
+        "Basic",
+        "Descriptor",
+        "Char",
+        "Description",
+        "Groups",
+        "Time",
+    ];
+
 }

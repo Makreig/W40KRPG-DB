@@ -24,4 +24,13 @@ class CharTrait extends DataObject
     private static $has_one = [
         'Source' => Source::class,
     ];
+
+    private static $summary_fields = [
+        "Sort",
+        "Name",
+        "Human",
+        "Prerequisite",
+        "Description",
+        "Group",
+    ];
 }

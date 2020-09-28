@@ -22,4 +22,12 @@ class Talent extends DataObject
     private static $has_one = [
         'Source' => Source::class,
     ];
+
+    private static $summary_fields = [
+        "Sort",
+        "Name",
+        "Prerequisite",
+        "Group",
+        "Tier",
+    ];
 }
