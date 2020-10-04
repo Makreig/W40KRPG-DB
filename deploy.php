@@ -9,6 +9,7 @@ require 'recipe/silverstripe.php';
 set('application', 'W40KRPG-DB');
 set('org_name', 'Makreig');
 set('deploy_user', 'W40KRPG');
+set('deploy_dev_user', 'W40KRPG');
 
 // Historic releases
 set('keep_releases', 5);
@@ -49,11 +50,12 @@ set(
 );
 
 // Setup dev server deployment
-host('no-cf.thedevserver.co.uk')
+host('dingo.ilateral.co.uk')
     ->stage('dev')
-    ->user('root')
-    ->set('deploy_path', '/srv/{{application}}')
-    ->set('http_user', 'apache')
+    ->port(2020)
+    ->user(get('deploy_dev_user'))    
+    ->set('deploy_path', '/home/{{deploy_dev_user}}/{{application}}')
+    ->set('http_user', 'nginx')
     ->identityFile('~/.ssh/id_rsa');
 
 // Setup live server deployment
